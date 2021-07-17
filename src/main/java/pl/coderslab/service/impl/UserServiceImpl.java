@@ -41,8 +41,8 @@ public class UserServiceImpl implements UserService {
         if(user != null) {
             throw new RegisterFailedException("użytkownik o takim loginie już istnieje");
         }
-        if(dto.getPassword() == null || dto.getConfirm_password() == null ||
-                !dto.getPassword().equals(dto.getConfirm_password())) {
+        if(dto.getPassword() == null || dto.getConfirmPassword() == null ||
+                !dto.getPassword().equals(dto.getConfirmPassword())) {
             throw new RegisterFailedException("podane hasła są różne");
         }
 
@@ -81,8 +81,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User registerUser(RegisterUserDto dto) throws RegisterFailedException {
-        if(!dto.getPassword().equals(dto.getConfirm_password()) || dto.getPassword()==null || dto.getPassword().isEmpty()
-                || dto.getConfirm_password()==null || dto.getConfirm_password().isEmpty()){
+        if(!dto.getPassword().equals(dto.getConfirmPassword()) || dto.getPassword()==null || dto.getPassword().isEmpty()
+                || dto.getConfirmPassword()==null || dto.getConfirmPassword().isEmpty()){
             throw new RegisterFailedException("Password incorrect");
         }
         User user = userRepository.findByLogin(dto.getLogin());

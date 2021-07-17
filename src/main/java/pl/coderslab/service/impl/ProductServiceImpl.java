@@ -6,6 +6,8 @@ import pl.coderslab.model.Product;
 import pl.coderslab.repository.ProductRepository;
 import pl.coderslab.service.ProductService;
 
+import java.util.List;
+
 @Service
 public class ProductServiceImpl implements ProductService {
 
@@ -21,5 +23,20 @@ public class ProductServiceImpl implements ProductService {
     public Product setAvailable(Product product, boolean available) {
         product.setAvailable(available);
         return productRepository.save(product);
+    }
+
+    @Override
+    public List<Product> findAll() {
+        return productRepository.findAll();
+    }
+
+    @Override
+    public Product saveProduct(Product product) {
+        return productRepository.save(product);
+    }
+
+    @Override
+    public List<Product> findAllActive() {
+        return productRepository.findByAvailableTrue();
     }
 }

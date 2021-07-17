@@ -46,14 +46,15 @@ public class HomeController { //kontroller gdzie do endpointów dostęp mają ni
     public String register(@Valid RegisterUserDto dto, BindingResult result){
         User user = null;
 
+        System.out.println("Rejestruje");
         if(!result.hasErrors() ){
             try {
                 user = userService.findByLogin(dto.getLogin());
                 if(user != null) {
                     throw new RegisterFailedException("użytkownik o takim loginie już istnieje");
                 }
-                if(dto.getPassword() == null || dto.getConfirm_password() == null ||
-                        !dto.getPassword().equals(dto.getConfirm_password())) {
+                if(dto.getPassword() == null || dto.getConfirmPassword() == null ||
+                        !dto.getPassword().equals(dto.getConfirmPassword())) {
                     throw new RegisterFailedException("podane hasła są różne");
                 }
                 user = userService.registerUser(dto);

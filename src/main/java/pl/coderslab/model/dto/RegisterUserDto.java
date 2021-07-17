@@ -1,6 +1,7 @@
 package pl.coderslab.model.dto;
 
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
@@ -25,10 +26,12 @@ public class RegisterUserDto { //obiekt DTO czyli Data Transfer Object, wykorzys
     private String email;
     @NotNull
     private String login;
-    @Min(6)
+    @NotNull
+    @Length(min=6)
     private String password;
-    @Min(6)
-    private String confirm_password;
+    @NotNull
+    @Length(min=6)
+    private String confirmPassword;
     @NotNull
     private String firstName;
     @NotNull
