@@ -10,4 +10,5 @@ public interface ProductService {
     List<Product> findAll();
     Product saveProduct(Product product);
     List<Product> findAllActive();
+    Product getProductById(Long id);
 }

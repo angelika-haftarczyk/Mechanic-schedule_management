@@ -1,59 +1,16 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: angel
+  Date: 2021-07-14
+  Time: 12:18
+  To change this template use File | Settings | File Templates.
+--%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
 <!DOCTYPE html>
 <html lang="pl">
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-
-    <link href='/lib/main.css' rel='stylesheet' />
-    <script src='/lib/main.js'></script>
-    <script>
-
-        document.addEventListener('DOMContentLoaded', function() {
-            var startDate = new Date();
-            var endDate = new Date();
-            endDate.setMonth(endDate.getMonth() + 4);
-            endDate.setDate(-1);
-            var calendarEl = document.getElementById('calendar');
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                validRange: {
-                    start: startDate,
-                    end: endDate,
-                },
-                headerToolbar: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
-                },
-                dateClick: function (info) {
-                    if(info.date.getHours() === 0) {
-                        calendar.changeView('timeGridDay', info.date);
-                    } else if (true) { //TODO if (zalogowany)
-                        window.location.href = '/schedule/add?date=' + info.date.toISOString();
-                    } else {
-                        alert('W celue umówienia wizyty, proszę się zalogować');
-                    }
-                },
-                events: [
-                    <c:forEach  var="schedule" items="${schedules}" varStatus="status">
-                        {
-                            title: '${schedule.name}',
-                            start: '${schedule.startTime}',
-                            end: '${schedule.endTime}'
-                        }
-                        <c:if test="${not status.last}">,</c:if>
-                    </c:forEach>
-
-                ]
-            });
-            calendar.setOption('locale', 'pl');
-            calendar.render();
-        });
-
-    </script>
-
+    <meta charset="utf-8" />
     <link rel="apple-touch-icon" sizes="76x76" href="../theme/img/apple-icon.png">
     <link rel="icon" type="image/png" href="../theme/img/favicon.png">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -83,24 +40,24 @@
         </a></div>
         <div class="sidebar-wrapper">
             <ul class="nav">
-                <li class="nav-item  ">
-                    <a class="nav-link" href="/">
+                <li class="nav-item active  ">
+                    <a class="nav-link" href="/index">
                         <i class="material-icons">dashboard</i>
                         <p>Strona główna</p>
                     </a>
                 </li>
-                <li class="nav-item ">
-                    <a class="nav-link" href="/login">
-                        <i class="material-icons">person</i>
-                        <p>Zaloguj się</p>
-                    </a>
-                </li>
-                <li class="nav-item ">
-                    <a class="nav-link" href="/register">
-                        <i class="material-icons">person_add</i>
-                        <p>Zarejestruj się</p>
-                    </a>
-                </li>
+<%--                <li class="nav-item ">--%>
+<%--                    <a class="nav-link" href="./user.html">--%>
+<%--                        <i class="material-icons">person</i>--%>
+<%--                        <p>Zaloguj się</p>--%>
+<%--                    </a>--%>
+<%--                </li>--%>
+<%--                <li class="nav-item ">--%>
+<%--                    <a class="nav-link" href="./user.html">--%>
+<%--                        <i class="material-icons">person_add</i>--%>
+<%--                        <p>Zarejestruj się</p>--%>
+<%--                    </a>--%>
+<%--                </li>--%>
                 <li class="nav-item ">
                     <a class="nav-link" href="/schedule">
                         <i class="material-icons">calendar_today</i>
@@ -109,7 +66,7 @@
                 </li>
                 <li class="nav-item ">
                     <a class="nav-link" href="/product">
-                        <i class="material-icons">handyman</i>
+                        <i class="material-icons">library_books</i>
                         <p>Usługi</p>
                     </a>
                 <li class="nav-item ">
@@ -118,6 +75,12 @@
                         <p>Maps</p>
                     </a>
                 </li>
+                <!-- <li class="nav-item active-pro ">
+                      <a class="nav-link" href="./upgrade.html">
+                          <i class="material-icons">unarchive</i>
+                          <p>Upgrade to PRO</p>
+                      </a>
+                  </li> -->
             </ul>
         </div>
     </div>
@@ -133,12 +96,34 @@
                 </button>
                 <div class="collapse navbar-collapse justify-content-end">
                     <ul class="navbar-nav">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link" href="javscript:void(0)" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="material-icons">notification</i>
+                                <span class="notification">5</span>
+                                <p class="d-lg-none d-md-block">
+                                    Some Actions
+                                </p>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                                <a class="dropdown-item" href="javascript:void(0)">Mike John responded to your email</a>
+                                <a class="dropdown-item" href="javascript:void(0)">You have 5 new tasks</a>
+                                <a class="dropdown-item" href="javascript:void(0)">You're now friend with Andrew</a>
+                                <a class="dropdown-item" href="javascript:void(0)">Another Notification</a>
+                                <a class="dropdown-item" href="javascript:void(0)">Another One</a>
+                            </div>
+                        </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/login">
+                            <a class="nav-link" href="javascript:void(0)">
                                 <i class="material-icons">person</i>
                                 <p class="d-lg-none d-md-block">
-                                    Account
+                                    Konto
                                 </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-item" href="">
+                                <i class="material-icons">logout</i>
+                                <p class="d-lg-none d-md-block">
                             </a>
                         </li>
                     </ul>

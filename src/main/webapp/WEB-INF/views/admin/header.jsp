@@ -1,59 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
 <!DOCTYPE html>
 <html lang="pl">
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-
-    <link href='/lib/main.css' rel='stylesheet' />
-    <script src='/lib/main.js'></script>
-    <script>
-
-        document.addEventListener('DOMContentLoaded', function() {
-            var startDate = new Date();
-            var endDate = new Date();
-            endDate.setMonth(endDate.getMonth() + 4);
-            endDate.setDate(-1);
-            var calendarEl = document.getElementById('calendar');
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                validRange: {
-                    start: startDate,
-                    end: endDate,
-                },
-                headerToolbar: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
-                },
-                dateClick: function (info) {
-                    if(info.date.getHours() === 0) {
-                        calendar.changeView('timeGridDay', info.date);
-                    } else if (true) { //TODO if (zalogowany)
-                        window.location.href = '/schedule/add?date=' + info.date.toISOString();
-                    } else {
-                        alert('W celue umówienia wizyty, proszę się zalogować');
-                    }
-                },
-                events: [
-                    <c:forEach  var="schedule" items="${schedules}" varStatus="status">
-                        {
-                            title: '${schedule.name}',
-                            start: '${schedule.startTime}',
-                            end: '${schedule.endTime}'
-                        }
-                        <c:if test="${not status.last}">,</c:if>
-                    </c:forEach>
-
-                ]
-            });
-            calendar.setOption('locale', 'pl');
-            calendar.render();
-        });
-
-    </script>
-
     <link rel="apple-touch-icon" sizes="76x76" href="../theme/img/apple-icon.png">
     <link rel="icon" type="image/png" href="../theme/img/favicon.png">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -67,7 +17,7 @@
     <!-- CSS Files -->
     <link href="../theme/css/material-dashboard.css?v=2.1.0" rel="stylesheet" />
     <!-- CSS Just for demo purpose, don't include it in your project -->
-    <%--    <link href="../assets/demo/demo.css" rel="stylesheet" />--%>
+<%--    <link href="../assets/demo/demo.css" rel="stylesheet" />--%>
 </head>
 
 <body class="dark-edition">
@@ -83,7 +33,7 @@
         </a></div>
         <div class="sidebar-wrapper">
             <ul class="nav">
-                <li class="nav-item  ">
+                <li class="nav-item active  ">
                     <a class="nav-link" href="/">
                         <i class="material-icons">dashboard</i>
                         <p>Strona główna</p>
@@ -102,14 +52,14 @@
                     </a>
                 </li>
                 <li class="nav-item ">
-                    <a class="nav-link" href="/schedule">
+                    <a class="nav-link" href="/calendar">
                         <i class="material-icons">calendar_today</i>
                         <p>Kalendarz</p>
                     </a>
                 </li>
                 <li class="nav-item ">
                     <a class="nav-link" href="/product">
-                        <i class="material-icons">handyman</i>
+                        <i class="material-icons">library_books</i>
                         <p>Usługi</p>
                     </a>
                 <li class="nav-item ">

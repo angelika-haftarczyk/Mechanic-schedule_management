@@ -7,11 +7,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import pl.coderslab.model.Product;
 import pl.coderslab.model.Role;
+import pl.coderslab.model.Schedule;
 import pl.coderslab.model.User;
+import pl.coderslab.model.dto.RegisterUserDto;
 import pl.coderslab.service.ProductService;
 import pl.coderslab.service.RoleService;
+import pl.coderslab.service.ScheduleService;
 import pl.coderslab.service.UserService;
 
+import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.List;
 
 @SpringBootApplication
@@ -47,8 +52,21 @@ public class Application {
                 user.setEmail("admin@admin.coderslab.pl");
                 userService.saveAdmin(user);
             }
+            if(userService.findByLogin("adam123")==null) { //tworze użytkownika
+
+                RegisterUserDto user = new RegisterUserDto();
+                user.setLogin("adam123");
+                user.setPassword("asdasd");
+                user.setConfirmPassword("asdasd");
+                user.setFirstName("Adam");
+                user.setLastName("Nowak");
+                user.setNumberPhone("888 000 000");
+                user.setEmail("adam@wp.pl");
+                userService.registerUser(user);
+            }
         };
     }
+
 
     @Bean
     CommandLineRunner initProduct(ProductService productService) { //funkcja ktora uruchamia sie podczas startu aplikacji (za kazdym razem)
@@ -81,5 +99,30 @@ public class Application {
         };
     }
 
-
+    @Bean
+    CommandLineRunner initSchedule(ScheduleService scheduleService, ProductService productService, UserService userService) { //funkcja ktora uruchamia sie podczas startu aplikacji (za kazdym razem)
+        return (args) -> {
+            List<Schedule> allSchedule = scheduleService.findAllSchedule();
+            if(allSchedule.isEmpty()){
+                Schedule schedule1 = new Schedule();
+                List<Product> allActive = productService.findAllActive();
+                User adam123 = userService.findByLogin("adam123");
+                schedule1.setStartTimeWork(LocalDateTime.of(2021, Month.JULY, 17, 9, 0));
+                schedule1.setService(allActive.get(0));
+                schedule1.setUser(adam123);
+                scheduleService.addSchedule(schedule1);
+                Schedule schedule2 = new Schedule();
+                schedule2.setStartTimeWork(LocalDateTime.of(2021, Month.JULY, 17, 11, 30));
+                schedule2.setService(allActive.get(1));
+                schedule2.setUser(adam123);
+                scheduleService.addSchedule(schedule2);
+                User jan123 = userService.findByLogin("jan123");
+                Schedule schedule3 = new Schedule();
+                schedule3.setStartTimeWork(LocalDateTime.of(2021, Month.JULY, 17, 10, 00));
+                schedule3.setService(allActive.get(0));
+                schedule3.setUser(jan123);
+                scheduleService.addSchedule(schedule3);
+            }
+        };
+    }
 }
