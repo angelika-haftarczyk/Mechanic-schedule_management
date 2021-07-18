@@ -3,9 +3,6 @@ package pl.coderslab.controller;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,10 +21,7 @@ import pl.coderslab.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.net.URI;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +40,7 @@ public class ScheduleController {
     UserService userService;
 
     @RequestMapping("")
-    public String index(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Model model){
+    public String index(HttpServletRequest httpServletRequest, Model model){
         if(model.containsAttribute("error")) {
             System.out.println("error: "+model.getAttribute("error"));
         } else {

@@ -1,7 +1,7 @@
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<jsp:include page="header.jsp"/>
+<jsp:include page="headerUser.jsp"/>
 
 <body class="bg-dark">
 
@@ -36,7 +36,7 @@
                     <option value="${product.id}">${product.serviceName}</option>
                     </c:forEach>
                     </select>
-                        <label for="service">Nazwisko</label>
+                        <label for="service">Usługa</label>
                     </div>
                 </div>
 
@@ -60,4 +60,4 @@
     </div>
 </div>
 
-<jsp:include page="footer.jsp"/>
+<jsp:include page="footerUser.jsp"/>

@@ -33,8 +33,11 @@
                     } else if (true) { //TODO if (zalogowany)
                         window.location.href = '/schedule/add?date=' + info.date.toISOString();
                     } else {
-                        alert('W celue umówienia wizyty, proszę się zalogować');
+                        alert('W celu umówienia wizyty, proszę się zalogować');
                     }
+                },
+                eventClick: function (info) {
+                    console.log('event:', JSON.stringify(info.event)) //TODO if event.title=niedostępne, else edit
                 },
                 events: [
                     <c:forEach  var="schedule" items="${schedules}" varStatus="status">
