@@ -8,6 +8,8 @@
 
     <link href='/lib/main.css' rel='stylesheet' />
     <script src='/lib/main.js'></script>
+    <script src='/lib/locales/pl.js'></script>
+    <script src='/lib/laravel.js'></script>
     <script>
 
         document.addEventListener('DOMContentLoaded', function() {
@@ -16,43 +18,54 @@
             endDate.setMonth(endDate.getMonth() + 4);
             endDate.setDate(-1);
             var calendarEl = document.getElementById('calendar');
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                validRange: {
-                    start: startDate,
-                    end: endDate,
-                },
-                headerToolbar: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
-                },
-                dateClick: function (info) {
-                    if(info.date.getHours() === 0) {
-                        calendar.changeView('timeGridDay', info.date);
-                    } else if (true) { //TODO if (zalogowany)
-                        window.location.href = '/schedule/add?date=' + info.date.toISOString();
-                    } else {
-                        alert('W celu umówienia wizyty, proszę się zalogować');
-                    }
-                },
-                eventClick: function (info) {
-                    console.log('event:', JSON.stringify(info.event)) //TODO if event.title=niedostępne, else edit
-                },
-                events: [
-                    <c:forEach  var="schedule" items="${schedules}" varStatus="status">
+            if(calendarEl != null) {
+                var calendar = new FullCalendar.Calendar(calendarEl, {
+                    locale: 'pl',
+                    initialView: 'dayGridMonth',
+                    validRange: {
+                        start: startDate,
+                        end: endDate,
+                    },
+                    headerToolbar: {
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                    },
+                    dateClick: function (info) {
+                        if(info.date.getHours() === 0) {
+                            calendar.changeView('timeGridDay', info.date);
+                        } else if (${not empty username}) { //TODO if (zalogowany)
+                            var date = new Date(info.date);
+                            date.setMinutes( date.getMinutes() - info.date.getTimezoneOffset());
+                            window.location.href = '/schedule/add?date=' + date.toISOString();
+                        } else {
+                            alert('W celu umówienia wizyty, proszę się zalogować');
+                        }
+                    },
+                    eventClick: function (info) {
+                        console.log('event:', JSON.stringify(info.event)) //TODO if event.title=niedostępne, else edit
+                        if(info.event.title !== 'niedotępne') {
+                            var date = new Date(info.event.start);
+                            date.setMinutes( date.getMinutes() - info.event.start.getTimezoneOffset());
+                            window.location.href = '/schedule/edit?date=' + date.toISOString();
+                        }
+                    },
+                    events: [
+                        <c:forEach  var="schedule" items="${schedules}" varStatus="status">
                         {
                             title: '${schedule.name}',
                             start: '${schedule.startTime}',
                             end: '${schedule.endTime}'
                         }
                         <c:if test="${not status.last}">,</c:if>
-                    </c:forEach>
+                        </c:forEach>
 
-                ]
-            });
-            calendar.setOption('locale', 'pl');
-            calendar.render();
+                    ]
+                });
+                calendar.setOption('locale', 'pl');
+                calendar.render();
+            }
+
         });
 
     </script>
@@ -115,6 +128,7 @@
                         <i class="material-icons">handyman</i>
                         <p>Usługi</p>
                     </a>
+                </li>
                 <li class="nav-item ">
                     <a class="nav-link" href="./map.html">
                         <i class="material-icons">location_ons</i>
@@ -136,14 +150,28 @@
                 </button>
                 <div class="collapse navbar-collapse justify-content-end">
                     <ul class="navbar-nav">
+                    <c:if test="${not empty username}">
                         <li class="nav-item">
-                            <a class="nav-link" href="/login">
+                            <a class="nav-link" href="/user">
+                                <span style="text-transform: capitalize"> ${username} </span>
                                 <i class="material-icons">person</i>
-                                <p class="d-lg-none d-md-block">
-                                    Account
-                                </p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <form method="post" action="/logout">
+                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                                <div class="nav-link" onclick="this.parentNode.submit()"><i class="material-icons">logout</i></div>
+                            </form>
+
+                        </li>
+                    </c:if>
+                    <c:if test="${empty username}">
+                            <li class="nav-item">
+                                <a class="nav-link" href="/login">
+                                    <i class="material-icons">login</i>
+                                </a>
+                            </li>
+                    </c:if>
                     </ul>
                 </div>
             </div>

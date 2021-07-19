@@ -32,4 +32,16 @@ public class ScheduleServiceImpl implements ScheduleService {
     public List<Schedule> findAllSchedule() {
         return scheduleRepository.findAll();
     }
+
+    @Override
+    public Schedule findByStartTimeWork(LocalDateTime date) {
+        return scheduleRepository.findByStartTimeWork(date);
+    }
+
+    @Override
+    public void deleteSchedule(Schedule schedule) {
+        if(schedule != null && schedule.getId() != null) {
+            scheduleRepository.delete(schedule);
+        }
+    }
 }

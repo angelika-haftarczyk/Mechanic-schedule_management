@@ -15,7 +15,7 @@ import pl.coderslab.service.UserService;
 import javax.validation.Valid;
 
 @Controller
-public class HomeController { //kontroller gdzie do endpointów dostęp mają niezalogowani użytkownicy
+public class HomeController { //kontroler gdzie do endpointów dostęp mają niezalogowani użytkownicy
 
     @Autowired
     UserService userService;
@@ -68,8 +68,9 @@ public class HomeController { //kontroller gdzie do endpointów dostęp mają ni
             }
         }
         return "register";
-
     }
+
+
     @RequestMapping(value = "/404",method = RequestMethod.GET)
     public String print404(){
         return "404";
