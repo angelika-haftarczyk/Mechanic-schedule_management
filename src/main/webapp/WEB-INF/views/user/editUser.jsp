@@ -122,14 +122,12 @@ invoiceData.classList.add('d-none');
 invoice.addEventListener('click', function (event) {
     if (invoice.checked) {
         invoiceData.classList.remove('d-none');
-        // invoiceData.querySelector('input').removeAttribute('required')
         for (let i = 0; i < inputs.length; i++) {
             inputs[i].setAttribute('required', 'required');
             inputs[i].setAttribute('disable', 'disable');
         }
     } else {
         invoiceData.classList.add('d-none');
-        // invoiceData.querySelector('#nip').setAttribute('required', 'required')
         for (let i = 0; i < inputs.length; i++) {
             inputs[i].removeAttribute('required');
             inputs[i].removeAttribute('disable');

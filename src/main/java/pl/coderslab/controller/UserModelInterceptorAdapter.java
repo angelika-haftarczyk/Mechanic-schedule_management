@@ -13,15 +13,17 @@ public class UserModelInterceptorAdapter implements HandlerInterceptor {
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+        //pobieram obiket zalogowania
         UsernamePasswordAuthenticationToken userPrincipal = (UsernamePasswordAuthenticationToken) request.getUserPrincipal();
-        String viewName = Optional.of(modelAndView).map(ModelAndView::getViewName).filter(name -> !name.isEmpty()).orElse("redirect:");
+        //pobieram nazwę view o ile istnieje(jak nie istnieje pobieram słowo redirect)
+        String viewName = Optional.ofNullable(modelAndView).map(ModelAndView::getViewName).filter(name -> !name.isEmpty()).orElse("redirect:");
         if(viewName.startsWith("redirect:")) {
             return;
         }
         if(userPrincipal != null &&
                 Optional.ofNullable(modelAndView)
-                        .map(ModelAndView::getModel)
-                        .map(model -> !model.containsKey("username"))
+                        .map(ModelAndView::getModel) // z modelAndView pobieram model
+                        .map(model -> !model.containsKey("username")) // model nie zawiera username
                         .orElse(false)) {
             CurrentUser user = (CurrentUser) userPrincipal.getPrincipal();
             modelAndView.getModel().put("username", user.getUser().getFirstName());

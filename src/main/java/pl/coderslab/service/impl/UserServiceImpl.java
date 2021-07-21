@@ -43,10 +43,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public User saveUser(UpdateUserDto dto) {
         User user = userRepository.findByLogin(dto.getLogin());
-        if((dto.getActualPassword() != null && !dto.getActualPassword().isEmpty()) ||
+        if((dto.getActualPassword() != null && !dto.getActualPassword().isEmpty()) || //dto dane z formularza, jakiekolwiek hasło zostało wpisane w formularzu
                 (dto.getNewPassword() != null && !dto.getNewPassword().isEmpty()) ||
                 (dto.getConfirmPassword() != null && !dto.getConfirmPassword().isEmpty())) {
-            if((dto.getActualPassword() == null || dto.getActualPassword().isEmpty()) ||
+            if((dto.getActualPassword() == null || dto.getActualPassword().isEmpty()) || //jak brakuje jakiegokolwiek hasła
                     (dto.getNewPassword() == null || dto.getNewPassword().isEmpty()) ||
                     (dto.getConfirmPassword() == null || dto.getConfirmPassword().isEmpty())) {
                 throw new RegisterFailedException("Nie wszystkie hasła są uzupełnione");
@@ -61,10 +61,6 @@ public class UserServiceImpl implements UserService {
                 throw new RegisterFailedException("Aktualne hasło nie pasuje");
             }
         }
-//        if(dto.getPassword() == null || dto.getConfirmPassword() == null ||
-//                !dto.getPassword().equals(dto.getConfirmPassword())) {
-//            throw new RegisterFailedException("podane hasła są różne");
-//        }
         user.setLogin(dto.getLogin());
         user.setEmail(dto.getEmail());
         user.setFirstName(dto.getFirstName());
@@ -109,11 +105,11 @@ public class UserServiceImpl implements UserService {
     public User registerUser(RegisterUserDto dto) throws RegisterFailedException {
         if(!dto.getPassword().equals(dto.getConfirmPassword()) || dto.getPassword()==null || dto.getPassword().isEmpty()
                 || dto.getConfirmPassword()==null || dto.getConfirmPassword().isEmpty()){
-            throw new RegisterFailedException("Password incorrect");
+            throw new RegisterFailedException("Hasło niepoprawne");
         }
         User user = userRepository.findByLogin(dto.getLogin());
         if(user != null) {
-            throw new RegisterFailedException("Login already exist");
+            throw new RegisterFailedException("Login już istnieje");
         }
         Role userRole = roleRepository.findByName("ROLE_USER");
 

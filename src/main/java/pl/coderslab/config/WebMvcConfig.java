@@ -10,14 +10,12 @@ import pl.coderslab.controller.UserModelInterceptorAdapter;
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
-     //
-
-    @Bean
+    @Bean // tworzy adapter dla użytkownika
     public HandlerInterceptor getUserModelInterceptorAdapter() {
         return new UserModelInterceptorAdapter();
     }
 
-    @Override
+    @Override //dodaje adapter do konfiguracji
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(getUserModelInterceptorAdapter());
     }

@@ -12,4 +12,6 @@ public interface ScheduleService {
     List<Schedule> findAllSchedule();
     Schedule findByStartTimeWork(LocalDateTime date);
     void deleteSchedule(Schedule schedule);
+
+    void update(Schedule schedule);
 }

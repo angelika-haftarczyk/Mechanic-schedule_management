@@ -70,13 +70,9 @@ public class HomeController { //kontroler gdzie do endpointów dostęp mają nie
     }
 
 
-    @RequestMapping(value = "/404",method = RequestMethod.GET)
+    @RequestMapping(value = "/error",method = RequestMethod.GET)
     public String print404(){
-        return "404";
-    }
-    @RequestMapping(value = "/blank",method = RequestMethod.GET)
-    public String blank(){
-        return "blank";
+        return "error";
     }
 
 }

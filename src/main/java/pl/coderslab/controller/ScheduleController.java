@@ -22,11 +22,8 @@ import pl.coderslab.service.ScheduleService;
 import pl.coderslab.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @AllArgsConstructor
 @Controller
@@ -58,9 +55,11 @@ public class ScheduleController {
             if(!httpServletRequest.isUserInRole("ROLE_ADMIN") && !schedule.getUser().getLogin().equals(login)) {
                 scheduleDto.setName("niedostępne");
                 scheduleDto.setUserName("niedostępne");
+                scheduleDto.setAccepted(false);
             } else {
                 scheduleDto.setName(schedule.getService().getServiceName());
                 scheduleDto.setUserName(schedule.getUser().getFirstName()+" "+schedule.getUser().getLastName());
+                scheduleDto.setAccepted(schedule.isAccepted());
             }
             schedules.add(scheduleDto);
         }
@@ -80,16 +79,16 @@ public class ScheduleController {
     public RedirectView add(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime date,
                             HttpServletRequest httpServletRequest,
                             RedirectAttributes redirectAttributes) {
-        String service = httpServletRequest.getParameter("service");
+        String service = httpServletRequest.getParameter("service"); // pobieram product
         String noteText = httpServletRequest.getParameter("note");
-        Long id = Long.parseLong(service);
+        Long serviceId = Long.parseLong(service);
         User user = userService.findByLogin(httpServletRequest.getRemoteUser());
-        Product product = productService.getProductById(id);
+        Product product = productService.getProductById(serviceId);
         Schedule schedule = new Schedule();
         schedule.setUser(user);
         schedule.setStartTimeWork(date);
         schedule.setService(product);
-
+        schedule.setAccepted(false);
         Note note = new Note();
         note.setNote(noteText);
         note.setUser(user);
@@ -100,7 +99,7 @@ public class ScheduleController {
                 noteService.saveNote(note);
             }
 
-        } catch (ScheduleException e) {
+        } catch (ScheduleException e) { //FlashAttribute jest niewidoczny w url
             redirectAttributes.addFlashAttribute("error", "wybierz inny termin");
         }
 
@@ -120,6 +119,8 @@ public class ScheduleController {
             model.addAttribute("products", productService.findAllActive());
             model.addAttribute("notes", schedule.getNotes());
             model.addAttribute("serviceId", schedule.getService().getId());
+            model.addAttribute("user", schedule.getUser());
+            model.addAttribute("accepted", schedule.isAccepted());
             return "user/scheduleEdit";
         }
         return "redirect:/schedule";
@@ -130,6 +131,11 @@ public class ScheduleController {
                          HttpServletRequest httpServletRequest) {
         Schedule schedule = scheduleService.findByStartTimeWork(date);
         User user = userService.findByLogin(httpServletRequest.getRemoteUser());
+        if(httpServletRequest.isUserInRole("ADMIN")) {
+            boolean accepted = Optional.ofNullable(httpServletRequest.getParameter("accepted")).map(a -> a.equals("on")).orElse(false);
+            schedule.setAccepted(accepted);
+            scheduleService.update(schedule);
+        }
         String noteText = httpServletRequest.getParameter("note");
         if(noteText != null && !noteText.isEmpty()) {
             Note note = new Note();

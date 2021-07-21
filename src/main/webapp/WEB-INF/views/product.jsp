@@ -7,6 +7,7 @@
 --%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <jsp:include page="headerDashboard.jsp"/>
 
@@ -31,6 +32,9 @@
                             <th>Opis usługi</th>
                             <th>Koszt usługi*</th>
                             <th>Czas trwania</th>
+                            <c:if test="${not empty isAdmin and isAdmin}">
+                                <th>Zmień dostępność</th>
+                            </c:if>
                             </thead>
                             <tbody>
                             <c:forEach var="product" items="${products}">
@@ -40,11 +44,24 @@
                                 <td>${product.description}</td>
                                 <td><fmt:formatNumber type="CURRENCY">${product.price}</fmt:formatNumber></td>
                                 <td>${product.durationInMinutes}</td>
+                                <c:if test="${not empty isAdmin and isAdmin}">
+                                    <th>
+                                    <form:form method="post" action="product/toggle" >
+                                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                                        <input type="hidden" name="id" value="${product.id}"/>
+                                        <input type="checkbox" name="available" class="form-control"  <c:if test="${product.available}">checked='checked'</c:if>  onclick="this.parentNode.submit()"/> <!-- this - input, parent form, robimy na formie submit -->
+                                  </form:form>
+                                    </th>
+                                </c:if>
                             </tr>
                             </c:forEach>
                             </tbody>
                         </table>
+                        <c:if test="${not empty isAdmin and isAdmin}">
+                            <a type="button" class="btn btn-primary btn-lg" href="product/add">Dodaj</a>
+                        </c:if>
                     </div>
+
                 </div>
             </div>
         </div>

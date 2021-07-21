@@ -5,7 +5,6 @@ import lombok.Data;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -21,4 +20,6 @@ public class Schedule extends BaseEntity {
 
     @OneToMany(mappedBy = "schedule")
     private List<Note> notes;
+
+    private boolean accepted;
 }

@@ -10,6 +10,7 @@ public class ScheduleDto {
     LocalDateTime endTime;
     String name;
     String userName;
+    Boolean accepted;
 
 
 }

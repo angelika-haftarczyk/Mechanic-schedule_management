@@ -73,7 +73,7 @@ public class Application {
         return (args) -> {
 
             List<Product> all = productService.findAll();
-            if (all.isEmpty()){
+            if (all.isEmpty()){ //jeżeli nie ma żadnych produktów to dodaję
                 Product wheelChange = new Product();
                 wheelChange.setAvailable(true);
                 wheelChange.setServiceName("Wymiana opon");
@@ -103,7 +103,7 @@ public class Application {
     CommandLineRunner initSchedule(ScheduleService scheduleService, ProductService productService, UserService userService) { //funkcja ktora uruchamia sie podczas startu aplikacji (za kazdym razem)
         return (args) -> {
             List<Schedule> allSchedule = scheduleService.findAllSchedule();
-            if(allSchedule.isEmpty()){
+            if(allSchedule.isEmpty()){ // jak nie ma terminów to dodaje
                 Schedule schedule1 = new Schedule();
                 List<Product> allActive = productService.findAllActive();
                 User adam123 = userService.findByLogin("adam123");
@@ -118,7 +118,7 @@ public class Application {
                 scheduleService.addSchedule(schedule2);
                 User jan123 = userService.findByLogin("jan123");
                 Schedule schedule3 = new Schedule();
-                schedule3.setStartTimeWork(LocalDateTime.of(2021, Month.JULY, 17, 10, 00));
+                schedule3.setStartTimeWork(LocalDateTime.of(2021, Month.JULY, 17, 10, 0));
                 schedule3.setService(allActive.get(0));
                 schedule3.setUser(jan123);
                 scheduleService.addSchedule(schedule3);

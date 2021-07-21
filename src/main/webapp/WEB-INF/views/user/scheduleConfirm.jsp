@@ -7,7 +7,6 @@
 
 <div class="container">
     <div class="card card-register mx-auto mt-5" >
-        <%--        <div class="card-header">Register an Account</div>--%>
         <div class="card-header card-header-primary">
             <h4 class="card-title">Edycja/usuwanie wizyty</h4>
         </div>
@@ -30,9 +29,9 @@
                 </div>
                 <div class="form-group">
                     <div class="form-label-group">
-                            <%--                        <input type="text" id="service" name="service" class="form-control" placeholder="Wpisz nazwisko" required="required" autofocus="autofocus">--%>
                         <select name="service" id="service" disabled>
                             <c:forEach var="product" items="${products}">
+                                // jeżeli opcja się dopasowała to ją wybierz
                                 <option value="${product.id}" ${product.id == productId ? 'selected="selected"' : ''}>${product.serviceName}</option>
                             </c:forEach>
                         </select>

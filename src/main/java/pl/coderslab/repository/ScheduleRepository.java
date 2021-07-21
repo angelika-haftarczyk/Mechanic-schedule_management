@@ -12,7 +12,7 @@ import java.util.List;
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
 
     @Query("select s from Schedule s where s.startTimeWork > ?1 and s.startTimeWork < ?2")
-    List<Schedule> findScheduleByDates(LocalDateTime endDate, LocalDateTime startDay);
+    List<Schedule> findScheduleByDates(LocalDateTime startDay, LocalDateTime endDay);
 
     Schedule findByStartTimeWork(LocalDateTime date);
 }

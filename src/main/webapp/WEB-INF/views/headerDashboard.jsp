@@ -17,37 +17,52 @@
             var endDate = new Date();
             endDate.setMonth(endDate.getMonth() + 4);
             endDate.setDate(-1);
-            var calendarEl = document.getElementById('calendar');
-            if(calendarEl != null) {
+            var calendarEl = document.getElementById('calendar'); //pobieram element calendar
+            if(calendarEl != null) { //jeżeli istnieje - tworze kalanedarz
                 var calendar = new FullCalendar.Calendar(calendarEl, {
                     locale: 'pl',
-                    initialView: 'dayGridMonth',
+                    initialView: 'dayGridMonth', //widok miesiąca na początku
                     validRange: {
                         start: startDate,
                         end: endDate,
                     },
                     headerToolbar: {
+                        //dostępne przysciski
                         left: 'prev,next today',
                         center: 'title',
                         right: 'dayGridMonth,timeGridWeek,timeGridDay'
                     },
-                    dateClick: function (info) {
-                        if(info.date.getHours() === 0) {
-                            calendar.changeView('timeGridDay', info.date);
-                        } else if (${not empty username}) { //TODO if (zalogowany)
-                            var date = new Date(info.date);
-                            date.setMinutes( date.getMinutes() - info.date.getTimezoneOffset());
-                            window.location.href = '/schedule/add?date=' + date.toISOString();
+                    businessHours: {
+                        //godziny i dni w których pracuje
+                        daysOfWeek: [1,2,3,4,5],
+                        startTime: '09:00',
+                        endTime: '17:00'
+                    },
+                    dateClick: function (info) { //obługa przycisku
+                        var date = new Date(info.date);
+                        if(date.getDay() === 6 || date.getDay() === 0){ // 6 - sobota, 0 - niedziela
+                            alert('W weekend nie pracuję ;)')
+                            return;
+                        }
+                        if(date.getHours() === 0) { // hours = 0 - widok miesiąca
+                            calendar.changeView('timeGridDay', date); // po kliknięcu zmieniam widok z miesiąca na dzień
+                        } else if (${not empty username}) {
+                                const hour = date.getHours();
+                                if(hour > 8 && hour < 17) {
+                                    date.setMinutes( date.getMinutes() - date.getTimezoneOffset()); //przeliczenie strefy czasowej
+                                    window.location.href = '/schedule/add?date=' + date.toISOString(); //przechodzimy na str dodaj harmonogram
+                                } else {
+                                    alert('Czynne w godzinach 09:00 - 17:00')
+                                }
                         } else {
                             alert('W celu umówienia wizyty, proszę się zalogować');
                         }
                     },
-                    eventClick: function (info) {
+                    eventClick: function (info) { //klikniecie w istniejacy termin
                         if(info.event.title !== 'niedostępne') {
                             var date = new Date(info.event.start);
-                            date.setMinutes( date.getMinutes() - info.event.start.getTimezoneOffset());
-                            const location = '/schedule/edit?date=' + date.toISOString();
-                            window.location.href = location;
+                            date.setMinutes( date.getMinutes() - info.event.start.getTimezoneOffset()); //przeliczenie strefy czasowej
+                            window.location.href = '/schedule/edit?date=' + date.toISOString(); //przechodzimy na strone edycji
                         }
                     },
                     events: [
@@ -55,9 +70,10 @@
                         {
                             title: '${schedule.name}',
                             start: '${schedule.startTime}',
-                            end: '${schedule.endTime}'
+                            end: '${schedule.endTime}',
+                            color: '${schedule.accepted ? 'green' : 'red'}'
                         }
-                        <c:if test="${not status.last}">,</c:if>
+                        <c:if test="${not status.last}">,</c:if> //jeżeli nie jest ostatni zrób ','
                         </c:forEach>
 
                     ]
@@ -131,12 +147,12 @@
                         <p>Usługi</p>
                     </a>
                 </li>
-                <li class="nav-item ">
-                    <a class="nav-link" href="./map.html">
-                        <i class="material-icons">location_ons</i>
-                        <p>Maps</p>
-                    </a>
-                </li>
+<%--                <li class="nav-item ">--%>
+<%--                    <a class="nav-link" href="map">--%>
+<%--                        <i class="material-icons">location_ons</i>--%>
+<%--                        <p>Maps</p>--%>
+<%--                    </a>--%>
+<%--                </li>--%>
             </ul>
         </div>
     </div>
