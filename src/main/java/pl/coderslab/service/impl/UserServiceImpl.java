@@ -6,8 +6,10 @@ import org.springframework.stereotype.Service;
 import pl.coderslab.exceptions.RegisterFailedException;
 import pl.coderslab.model.Role;
 import pl.coderslab.model.User;
+import pl.coderslab.model.UserInvoiceDetails;
 import pl.coderslab.model.dto.RegisterUserDto;
 import pl.coderslab.model.dto.UpdateUserDto;
+import pl.coderslab.repository.DetailsRepository;
 import pl.coderslab.repository.RoleRepository;
 import pl.coderslab.repository.UserRepository;
 import pl.coderslab.service.UserService;
@@ -27,35 +29,59 @@ public class UserServiceImpl implements UserService {
 
 
     @Autowired
-    BCryptPasswordEncoder passwordEncoder;
+    private BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
     private UserRepository userRepository;
 
     @Autowired
-    RoleRepository roleRepository;
+    private RoleRepository roleRepository;
+
+    @Autowired
+    private DetailsRepository detailsRepository;
 
     @Override
     public User saveUser(UpdateUserDto dto) {
         User user = userRepository.findByLogin(dto.getLogin());
-        if(user != null) {
-            throw new RegisterFailedException("użytkownik o takim loginie już istnieje");
-        }
-        if(dto.getPassword() == null || dto.getConfirmPassword() == null ||
-                !dto.getPassword().equals(dto.getConfirmPassword())) {
-            throw new RegisterFailedException("podane hasła są różne");
-        }
+        if((dto.getActualPassword() != null && !dto.getActualPassword().isEmpty()) ||
+                (dto.getNewPassword() != null && !dto.getNewPassword().isEmpty()) ||
+                (dto.getConfirmPassword() != null && !dto.getConfirmPassword().isEmpty())) {
+            if((dto.getActualPassword() == null || dto.getActualPassword().isEmpty()) ||
+                    (dto.getNewPassword() == null || dto.getNewPassword().isEmpty()) ||
+                    (dto.getConfirmPassword() == null || dto.getConfirmPassword().isEmpty())) {
+                throw new RegisterFailedException("Nie wszystkie hasła są uzupełnione");
+            }
+            if(!dto.getNewPassword().equals(dto.getConfirmPassword())){
+                throw new RegisterFailedException("Hasła do siebie nie pasują");
+            }
+            if(passwordEncoder.matches(dto.getActualPassword(), user.getPassword())) {
+                user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
+            } else {
 
-        user = new User();
+                throw new RegisterFailedException("Aktualne hasło nie pasuje");
+            }
+        }
+//        if(dto.getPassword() == null || dto.getConfirmPassword() == null ||
+//                !dto.getPassword().equals(dto.getConfirmPassword())) {
+//            throw new RegisterFailedException("podane hasła są różne");
+//        }
         user.setLogin(dto.getLogin());
-        user.setPassword(passwordEncoder.encode(dto.getPassword()));
         user.setEmail(dto.getEmail());
         user.setFirstName(dto.getFirstName());
         user.setLastName(dto.getLastName());
         user.setNumberPhone(dto.getNumberPhone());
-        user.setInvoice(false);
-        Role userRole = roleRepository.findByName("ROLE_USER");
-        user.setRoles(new HashSet<>(Arrays.asList(userRole)));
+        user.setInvoice(dto.isInvoice());
+        UserInvoiceDetails details = user.getDetails();
+        if(details == null) {
+            details = new UserInvoiceDetails();
+            details.setUser(user);
+            user.setDetails(details);
+        }
+        details.setCompanyAddress(dto.getCompanyAddress());
+        details.setCompanyName(dto.getCompanyName());
+        details.setNip(dto.getNip());
+        details.setRegon(dto.getRegon());
+        detailsRepository.save(details);
         return userRepository.save(user);
     }
 

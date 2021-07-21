@@ -9,6 +9,7 @@ public class ScheduleDto {
     LocalDateTime startTime;
     LocalDateTime endTime;
     String name;
+    String userName;
 
 
 }

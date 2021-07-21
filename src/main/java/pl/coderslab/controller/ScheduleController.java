@@ -47,36 +47,25 @@ public class ScheduleController {
 
     @RequestMapping("")
     public String index(HttpServletRequest httpServletRequest, Model model){
-        if(model.containsAttribute("error")) {
-            System.out.println("error: "+model.getAttribute("error"));
-        } else {
-            System.out.println("model pusty");
-        }
-        if(httpServletRequest.isUserInRole("ROLE_ADMIN")) {
-            model.addAttribute("schedules", scheduleService.findAllSchedule()); //TODO zmień na DTO
-            return "admin/schedule";
-        } else {
-            List<Schedule> allSchedule = scheduleService.findAllSchedule();
-            String login = httpServletRequest.getRemoteUser();
-            List<ScheduleDto> schedules = new ArrayList<>();
-            for (Schedule schedule : allSchedule) {
-                ScheduleDto scheduleDto = new ScheduleDto();
-                scheduleDto.setStartTime(schedule.getStartTimeWork());
-                LocalDateTime endTime = schedule.getStartTimeWork().plusMinutes(schedule.getService().getDurationInMinutes());
-                scheduleDto.setEndTime(endTime);
-                if (!schedule.getUser().getLogin().equals(login)) {
-//                    Product product = new Product();
-//                    product.setDurationInMinutes(schedule.getService().getDurationInMinutes());
-//                    schedule.setService(product);
-                    scheduleDto.setName("niedostępne");
-                } else {
-                    scheduleDto.setName(schedule.getService().getServiceName());
-                }
-                schedules.add(scheduleDto);
+        List<Schedule> allSchedule = scheduleService.findAllSchedule();
+        List<ScheduleDto> schedules = new ArrayList<>();
+        String login = httpServletRequest.getRemoteUser();
+        for (Schedule schedule : allSchedule) {
+            ScheduleDto scheduleDto = new ScheduleDto();
+            scheduleDto.setStartTime(schedule.getStartTimeWork());
+            LocalDateTime endTime = schedule.getStartTimeWork().plusMinutes(schedule.getService().getDurationInMinutes());
+            scheduleDto.setEndTime(endTime);
+            if(!httpServletRequest.isUserInRole("ROLE_ADMIN") && !schedule.getUser().getLogin().equals(login)) {
+                scheduleDto.setName("niedostępne");
+                scheduleDto.setUserName("niedostępne");
+            } else {
+                scheduleDto.setName(schedule.getService().getServiceName());
+                scheduleDto.setUserName(schedule.getUser().getFirstName()+" "+schedule.getUser().getLastName());
             }
-                model.addAttribute("schedules", schedules);
-                return "schedule";
+            schedules.add(scheduleDto);
         }
+        model.addAttribute("schedules", schedules);
+        return "schedule";
     }
 
     @RequestMapping(value = "/add",method = RequestMethod.GET)
@@ -115,7 +104,7 @@ public class ScheduleController {
             redirectAttributes.addFlashAttribute("error", "wybierz inny termin");
         }
 
-        RedirectView redirectView = new RedirectView("/schedule",true);
+        RedirectView redirectView = new RedirectView("/schedule",false);
         return redirectView;
     }
 
@@ -124,7 +113,8 @@ public class ScheduleController {
                        Model model, HttpServletRequest httpServletRequest) {
         Schedule schedule = scheduleService.findByStartTimeWork(date);
         User user = userService.findByLogin(httpServletRequest.getRemoteUser());
-        if(schedule != null && schedule.getId() != null && schedule.getUser().equals(user)) {
+        if(schedule != null && schedule.getId() != null &&
+                (schedule.getUser().equals(user) || httpServletRequest.isUserInRole("ROLE_ADMIN"))) {
             model.addAttribute("startTime", date.toLocalTime());
             model.addAttribute("dateTime", date.toLocalDate());
             model.addAttribute("products", productService.findAllActive());

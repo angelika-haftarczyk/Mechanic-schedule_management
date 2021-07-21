@@ -12,7 +12,7 @@
             <h4 class="card-title">Edytuj dane</h4>
         </div>
         <div class="card-body">
-            <form:form method="post" action="/">
+            <form:form method="post">
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 
                 <div class="form-group">
@@ -29,12 +29,6 @@
                 </div>
                 <div class="form-group">
                     <div class="form-label-group">
-                        <input type="text" id="login" name="login" class="form-control" placeholder="Wpisz login" readonly="readonly" >
-                        <label for="login">Login</label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="form-label-group">
                         <input type="tel" id="phoneNumber" name="numberPhone" class="form-control" value="${user.numberPhone}" placeholder="Wpisz numer telefonu" required="required" >
                         <label for="phoneNumber">Numer telefonu</label>
                     </div>
@@ -47,19 +41,19 @@
                 </div>
                 <div class="form-group">
                     <div class="form-label-group">
-                        <input type="password" id="inputActualPassword" name="actualPassword" class="form-control" placeholder="Wpisz poprzednie hasło jeśli chcesz zmienić" required="required">
-                        <label for="inputActualPassword">Hasło</label>
+                        <input type="password" id="inputActualPassword" name="actualPassword" class="form-control" placeholder="Wpisz poprzednie hasło jeśli chcesz zmienić" >
+                        <label for="inputActualPassword">Stare hasło</label>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="form-label-group">
-                        <input type="password" id="inputPassword" name="newPassword" class="form-control" placeholder="Wpisz nowe hasło jeśli chcesz zmienić" required="required">
-                        <label for="inputPassword">Hasło</label>
+                        <input type="password" id="inputPassword" name="newPassword" class="form-control" placeholder="Wpisz nowe hasło jeśli chcesz zmienić" >
+                        <label for="inputPassword">Nowe hasło</label>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="form-label-group">
-                        <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" placeholder="Wpisz nowe hasło jeśli chcesz zmienić" required="required">
+                        <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" placeholder="Wpisz nowe hasło jeśli chcesz zmienić" >
                         <label for="confirmPassword">Powtórz hasło</label>
                     </div>
                 </div>
@@ -72,30 +66,29 @@
         <div id="invoiceData">
                 <div class="form-group">
                     <div class="form-label-group">
-                        <input type="text" id="nip" name="nip" class="form-control" placeholder="Wpisz NIP" required="required">
-                        <label for="nip">Hasło</label>
+                        <input type="text" id="nip" name="nip" class="form-control" placeholder="Wpisz NIP" >
+                        <label for="nip">Wpisz NIP</label>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="form-label-group">
-                        <input type="text" id="regon" name="regon" class="form-control" placeholder="Wpisz REGON" required="required">
-                        <label for="regon">Hasło</label>
+                        <input type="text" id="regon" name="regon" class="form-control" placeholder="Wpisz REGON" >
+                        <label for="regon">Wpisz REGON (pole nieobowiązkowe)</label>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="form-label-group">
-                        <input type="text" id="companyName" name="companyName" class="form-control" placeholder="Wpisz nazwę firmy" required="required">
-                        <label for="companyName">Hasło</label>
+                        <input type="text" id="companyName" name="companyName" class="form-control" placeholder="Wpisz nazwę firmy" >
+                        <label for="companyName">Nazwa firmy</label>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="form-label-group">
-                        <input type="text" id="companyAddress" name="companyAddress" class="form-control" placeholder="Wpisz adres firmy" required="required">
-                        <label for="companyAddress">Hasło</label>
+                        <input type="text" id="companyAddress" name="companyAddress" class="form-control" placeholder="Wpisz adres firmy" >
+                        <label for="companyAddress">Adres firmy</label>
                     </div>
                 </div>
         </div>
-
 
                 <input type="submit" class="btn btn-primary btn-lg" value="Zapisz"/>
                 <div class="col-md-6">
@@ -105,8 +98,13 @@
                         <form:errors path="login" />
                         <form:errors path="numberPhone" />
                         <form:errors path="email" />
-                        <form:errors path="password" />
+                        <form:errors path="actualPassword"/>
+                        <form:errors path="newPassword" />
                         <form:errors path="confirmPassword" />
+                        <form:errors path="nip" />
+                        <form:errors path="regon" />
+                        <form:errors path="companyName" />
+                        <form:errors path="companyAddress" />
                     </div>
                 </div>
             </form:form>
@@ -115,16 +113,27 @@
     </div>
 </div>
 <script>
-    const invoice = document.querySelector('#invoice');
+const invoice = document.querySelector('#invoice');
 const invoiceData = document.querySelector('#invoiceData');
+const inputs = invoiceData.querySelectorAll('input');
 
 invoiceData.classList.add('d-none');
 
 invoice.addEventListener('click', function (event) {
     if (invoice.checked) {
         invoiceData.classList.remove('d-none');
+        // invoiceData.querySelector('input').removeAttribute('required')
+        for (let i = 0; i < inputs.length; i++) {
+            inputs[i].setAttribute('required', 'required');
+            inputs[i].setAttribute('disable', 'disable');
+        }
     } else {
         invoiceData.classList.add('d-none');
+        // invoiceData.querySelector('#nip').setAttribute('required', 'required')
+        for (let i = 0; i < inputs.length; i++) {
+            inputs[i].removeAttribute('required');
+            inputs[i].removeAttribute('disable');
+        }
     };
 });
 </script>

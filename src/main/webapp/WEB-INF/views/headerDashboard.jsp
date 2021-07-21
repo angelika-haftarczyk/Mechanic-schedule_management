@@ -9,7 +9,7 @@
     <link href='/lib/main.css' rel='stylesheet' />
     <script src='/lib/main.js'></script>
     <script src='/lib/locales/pl.js'></script>
-    <script src='/lib/laravel.js'></script>
+
     <script>
 
         document.addEventListener('DOMContentLoaded', function() {
@@ -43,11 +43,11 @@
                         }
                     },
                     eventClick: function (info) {
-                        console.log('event:', JSON.stringify(info.event)) //TODO if event.title=niedostępne, else edit
-                        if(info.event.title !== 'niedotępne') {
+                        if(info.event.title !== 'niedostępne') {
                             var date = new Date(info.event.start);
                             date.setMinutes( date.getMinutes() - info.event.start.getTimezoneOffset());
-                            window.location.href = '/schedule/edit?date=' + date.toISOString();
+                            const location = '/schedule/edit?date=' + date.toISOString();
+                            window.location.href = location;
                         }
                     },
                     events: [
@@ -105,6 +105,7 @@
                         <p>Strona główna</p>
                     </a>
                 </li>
+                <c:if test="${empty username}">
                 <li class="nav-item ">
                     <a class="nav-link" href="/login">
                         <i class="material-icons">person</i>
@@ -117,6 +118,7 @@
                         <p>Zarejestruj się</p>
                     </a>
                 </li>
+                </c:if>
                 <li class="nav-item ">
                     <a class="nav-link" href="/schedule">
                         <i class="material-icons">calendar_today</i>

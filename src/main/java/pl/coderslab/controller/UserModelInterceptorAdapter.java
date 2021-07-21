@@ -14,6 +14,10 @@ public class UserModelInterceptorAdapter implements HandlerInterceptor {
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
         UsernamePasswordAuthenticationToken userPrincipal = (UsernamePasswordAuthenticationToken) request.getUserPrincipal();
+        String viewName = Optional.of(modelAndView).map(ModelAndView::getViewName).filter(name -> !name.isEmpty()).orElse("redirect:");
+        if(viewName.startsWith("redirect:")) {
+            return;
+        }
         if(userPrincipal != null &&
                 Optional.ofNullable(modelAndView)
                         .map(ModelAndView::getModel)
@@ -21,7 +25,7 @@ public class UserModelInterceptorAdapter implements HandlerInterceptor {
                         .orElse(false)) {
             CurrentUser user = (CurrentUser) userPrincipal.getPrincipal();
             modelAndView.getModel().put("username", user.getUser().getFirstName());
-            modelAndView.getModel().put("isAdmin", user.getUser().getRoles().contains("ROLE_ADMIN"));
+            modelAndView.getModel().put("isAdmin", user.getUser().getRoles().stream().anyMatch(role -> role.getName().contains("ROLE_ADMIN")));
             modelAndView.getModel().put("view", modelAndView.getViewName());
         }
     }

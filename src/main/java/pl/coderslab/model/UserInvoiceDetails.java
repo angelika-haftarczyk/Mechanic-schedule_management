@@ -16,10 +16,10 @@ import javax.validation.constraints.NotNull;
 @Entity
 public class UserInvoiceDetails extends BaseEntity{
 
-    @NotNull
-    @NIP
+//    @NotNull
+//    @NIP
     private String nip;
-    @REGON
+//    @REGON
     private String regon;
     @NotNull
     private String companyName;

@@ -46,7 +46,6 @@ public class HomeController { //kontroler gdzie do endpointów dostęp mają nie
     public String register(@Valid RegisterUserDto dto, BindingResult result){
         User user = null;
 
-        System.out.println("Rejestruje");
         if(!result.hasErrors() ){
             try {
                 user = userService.findByLogin(dto.getLogin());

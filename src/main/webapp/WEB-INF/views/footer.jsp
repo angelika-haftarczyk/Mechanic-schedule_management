@@ -11,11 +11,11 @@
         <nav class="float-left">
             <ul>
 
-                <li>
-                    <a href="">
-                        O mnie
-                    </a>
-                </li>
+<%--                <li>--%>
+<%--                    <a href="">--%>
+<%--                        O mnie--%>
+<%--                    </a>--%>
+<%--                </li>--%>
 
 
             </ul>

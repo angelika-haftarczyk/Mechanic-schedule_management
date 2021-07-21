@@ -22,10 +22,9 @@ public class ProductController {
 //        model.addAttribute("user",user.getUser());
         if(httpServletRequest.isUserInRole("ROLE_ADMIN")) {
             model.addAttribute("products", productService.findAll());
-            return "admin/product";
         } else {
             model.addAttribute("products", productService.findAllActive());
-            return "product";
         }
+        return "product";
     }
 }

@@ -2,7 +2,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/functions" prefix = "fn" %>
-<jsp:include page="headerUser.jsp"/>
+<jsp:include page="../headerDashboard.jsp"/>
 
 <body class="bg-dark">
 
@@ -65,4 +65,4 @@
     </div>
 </div>
 
-<jsp:include page="footerUser.jsp"/>
+<jsp:include page="../footer.jsp"/>

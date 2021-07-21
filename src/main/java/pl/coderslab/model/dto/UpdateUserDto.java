@@ -11,19 +11,17 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
 @Data
-public class UpdateUserDto extends RegisterUserDto {
+public class UpdateUserDto {
 
-    @NotNull
-    Long id;
+
 
     @NotNull
     @Email
     private String email;
-    @NotNull
     private String login;
-    @Length(min=6)
+//    @Length(min=6)
     private String newPassword;
-    @Length(min=6)
+//    @Length(min=6)
     private String confirmPassword;
 
     private String actualPassword;
@@ -34,10 +32,10 @@ public class UpdateUserDto extends RegisterUserDto {
     @NotNull
     private String numberPhone;
 
-    @NotNull
-    @NIP
+//    @NotNull
+//    @NIP
     private String nip;
-    @REGON
+//    @REGON
     private String regon;
     @NotNull
     private String companyName;
