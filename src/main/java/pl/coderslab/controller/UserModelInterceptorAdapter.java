@@ -25,7 +25,7 @@ public class UserModelInterceptorAdapter implements HandlerInterceptor {
                         .map(ModelAndView::getModel) // z modelAndView pobieram model
                         .map(model -> !model.containsKey("username")) // model nie zawiera username
                         .orElse(false)) {
-            CurrentUser user = (CurrentUser) userPrincipal.getPrincipal();
+            CurrentUser user = (CurrentUser) userPrincipal.getPrincipal(); //obiekt rozszerzajacy domyslny obiekt User
             modelAndView.getModel().put("username", user.getUser().getFirstName());
             modelAndView.getModel().put("isAdmin", user.getUser().getRoles().stream().anyMatch(role -> role.getName().contains("ROLE_ADMIN")));
             modelAndView.getModel().put("view", modelAndView.getViewName());

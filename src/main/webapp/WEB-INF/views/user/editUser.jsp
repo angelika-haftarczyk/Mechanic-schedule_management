@@ -14,6 +14,7 @@
         <div class="card-body">
             <form:form method="post">
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+<%--                zabezpieczenie przed Cross site request forgery--%>
 
                 <div class="form-group">
                     <div class="form-label-group">
