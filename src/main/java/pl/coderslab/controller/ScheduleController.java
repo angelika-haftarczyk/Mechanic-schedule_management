@@ -153,7 +153,8 @@ public class ScheduleController {
                           Model model, HttpServletRequest httpServletRequest) {
         Schedule schedule = scheduleService.findByStartTimeWork(date);
         User user = userService.findByLogin(httpServletRequest.getRemoteUser());
-        if(schedule != null && schedule.getId() != null && schedule.getUser().equals(user)) {
+        if(schedule != null && schedule.getId() != null && schedule.getUser().equals(user) ||
+                httpServletRequest.isUserInRole("ROLE_ADMIN")) {
             model.addAttribute("startTime", date.toLocalTime());
             model.addAttribute("dateTime", date.toLocalDate());
             model.addAttribute("products", productService.findAllActive());
